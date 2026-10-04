@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.47.2
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    volumes:
+      - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - "9093:9093"
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    ports:
+      - "3000:3000"
+
+  webhook-logger:
+    image: python:3.11-slim
+    command:
+      - python3
+      - "-c"
+      - "import http.server, json; class H(http.server.BaseHTTPRequestHandler): def do_POST(s): l=int(s.headers['Content-Length']); print('ALERT FIRED:', json.loads(s.rfile.read(l))); s.send_response(200); s.end_headers(); http.server.HTTPServer(('', 9094), H).serve_forever()"
+    ports:
+      - "9094:9094"
+
+networks:
+  default:
+    name: clab
+    external: true

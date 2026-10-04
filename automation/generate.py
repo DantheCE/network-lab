@@ -62,6 +62,50 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
         with open(os.path.join(r_dir, "daemons"), "w") as f:
             f.write("bgpd=yes\nisisd=yes\n")
 
+    # Also generate the containerlab topology
+    lab_yml = {
+        "name": "network-lab",
+        "topology": {
+            "nodes": {},
+            "links": []
+        }
+    }
+    
+    for r_name in intent.routers.keys():
+        lab_yml["topology"]["nodes"][r_name] = {
+            "kind": "linux",
+            "image": "quay.io/frrouting/frr:10.0.1",
+            "binds": [
+                f"./configs/{r_name}/daemons:/etc/frr/daemons",
+                f"./configs/{r_name}/frr.conf:/etc/frr/frr.conf"
+            ]
+        }
+        # FRR Exporter
+        lab_yml["topology"]["nodes"][f"{r_name}-frr-exporter"] = {
+            "kind": "linux",
+            "image": "tynany/frr_exporter:latest",
+            "network-mode": f"container:{r_name}"
+        }
+        # Node Exporter
+        lab_yml["topology"]["nodes"][f"{r_name}-node-exporter"] = {
+            "kind": "linux",
+            "image": "prom/node-exporter:latest",
+            "network-mode": f"container:{r_name}"
+        }
+
+    # Add hosts
+    lab_yml["topology"]["nodes"]["h1"] = {"kind": "linux", "image": "wbitt/network-multitool:alpine-extra"}
+    lab_yml["topology"]["nodes"]["h2"] = {"kind": "linux", "image": "wbitt/network-multitool:alpine-extra"}
+
+    # Links
+    for link in intent.links:
+        lab_yml["topology"]["links"].append({
+            "endpoints": [f"{link.node_a}:{link.int_a}", f"{link.node_b}:{link.int_b}"]
+        })
+
+    with open(os.path.join(base_dir, "../topology/lab.clab.yml"), "w") as f:
+        yaml.dump(lab_yml, f, sort_keys=False)
+
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     intent = load_intent(os.path.join(base_dir, "../topology/intent.yml"))

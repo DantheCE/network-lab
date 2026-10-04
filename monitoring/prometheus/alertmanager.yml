@@ -1,0 +1,7 @@
+route:
+  receiver: 'webhook-logger'
+
+receivers:
+  - name: 'webhook-logger'
+    webhook_configs:
+      - url: 'http://webhook-logger:9094/'
