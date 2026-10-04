@@ -23,9 +23,14 @@ make down
 ```
 
 ## How to change the intent
-*(To be implemented in Milestone 3: Intent-driven automation)*
-Currently, configs are stored in `topology/configs/`.
+1. Edit `topology/intent.yml` (the single source of truth).
+2. Run `python3 automation/generate.py` to update the FRR templates.
+3. Run `make deploy` to push the configurations to the running lab.
 
 ## How to run verification
-*(To be implemented in Milestone 3: Verification script)*
-Currently, verify manually using `docker exec -it clab-network-lab-<node> vtysh`.
+Run `make verify` to execute `automation/verify.py`. This script ensures IS-IS adjacencies are up and BGP sessions are established across all routers.
+
+To run the Python unit tests for the automation scripts:
+```bash
+make test
+```

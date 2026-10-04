@@ -1,0 +1,69 @@
+frr version 10.0.1
+frr defaults traditional
+hostname {{ router_name }}
+!
+interface lo
+ ip address {{ router.loopback }}/32
+{% if router.isis_net %}
+ ip router isis 1
+ isis passive
+{% endif %}
+!
+{% for intf in interfaces %}
+interface {{ intf.name }}
+ ip address {{ intf.ip }}
+{% if intf.type == 'isis' %}
+ ip router isis 1
+ isis network point-to-point
+{% endif %}
+!
+{% endfor %}
+{% if router.isis_net %}
+router isis 1
+ net {{ router.isis_net }}
+ is-type level-2-only
+!
+{% endif %}
+{% if policies and policies.allowed_prefixes %}
+{% for prefix in policies.allowed_prefixes %}
+ip prefix-list ALLOWED_PREFIXES permit {{ prefix }}
+{% endfor %}
+!
+{% endif %}
+router bgp {{ router.asn }}
+ bgp router-id {{ router.loopback }}
+ no bgp ebgp-requires-policy
+{% if router.originate_prefixes %}
+{% for prefix in router.originate_prefixes %}
+ network {{ prefix }}
+{% endfor %}
+{% endif %}
+{% if ibgp_peers %}
+ ! iBGP
+{% for peer in ibgp_peers %}
+ neighbor {{ peer.loopback }} remote-as {{ router.asn }}
+ neighbor {{ peer.loopback }} update-source lo
+{% endfor %}
+{% endif %}
+{% if ebgp_peers %}
+ ! eBGP
+{% for peer in ebgp_peers %}
+ neighbor {{ peer.ip }} remote-as {{ peer.asn }}
+ neighbor {{ peer.ip }} route-map RM_IN_{{ peer.ip }} in
+ neighbor {{ peer.ip }} route-map RM_OUT_{{ peer.ip }} out
+ neighbor {{ peer.ip }} maximum-prefix {{ policies.ebgp_max_prefix | default(100) }}
+{% endfor %}
+{% endif %}
+!
+{% if ebgp_peers %}
+{% for peer in ebgp_peers %}
+route-map RM_IN_{{ peer.ip }} permit 10
+ match ip address prefix-list ALLOWED_PREFIXES
+ set local-preference {{ peer.local_pref }}
+!
+route-map RM_OUT_{{ peer.ip }} permit 10
+ match ip address prefix-list ALLOWED_PREFIXES
+ set community {{ router.asn }}:1
+!
+{% endfor %}
+{% endif %}

@@ -1,0 +1,109 @@
+routers:
+  r11:
+    asn: 65001
+    loopback: 10.255.0.11
+    isis_net: 49.0001.0102.5500.0011.00
+    originate_prefixes:
+      - 10.10.1.0/24
+  r12:
+    asn: 65001
+    loopback: 10.255.0.12
+    isis_net: 49.0001.0102.5500.0012.00
+  r13:
+    asn: 65001
+    loopback: 10.255.0.13
+    isis_net: 49.0001.0102.5500.0013.00
+  r21:
+    asn: 65002
+    loopback: 10.255.0.21
+    isis_net: 49.0002.0102.5500.0021.00
+  r22:
+    asn: 65002
+    loopback: 10.255.0.22
+    isis_net: 49.0002.0102.5500.0022.00
+  r31:
+    asn: 65003
+    loopback: 10.255.0.31
+    originate_prefixes:
+      - 10.10.2.0/24
+
+links:
+  # Intra-AS IS-IS
+  - node_a: r11
+    int_a: eth1
+    ip_a: 10.0.0.0/31
+    node_b: r12
+    int_b: eth1
+    ip_b: 10.0.0.1/31
+    type: isis
+  - node_a: r12
+    int_a: eth2
+    ip_a: 10.0.0.2/31
+    node_b: r13
+    int_b: eth1
+    ip_b: 10.0.0.3/31
+    type: isis
+  - node_a: r13
+    int_a: eth2
+    ip_a: 10.0.0.4/31
+    node_b: r11
+    int_b: eth2
+    ip_b: 10.0.0.5/31
+    type: isis
+  - node_a: r21
+    int_a: eth1
+    ip_a: 10.0.0.6/31
+    node_b: r22
+    int_b: eth1
+    ip_b: 10.0.0.7/31
+    type: isis
+    
+  # Inter-AS eBGP
+  - node_a: r11
+    int_a: eth3
+    ip_a: 10.0.0.8/31
+    node_b: r21
+    int_b: eth2
+    ip_b: 10.0.0.9/31
+    type: ebgp
+    local_pref_a: 200
+    local_pref_b: 200
+  - node_a: r12
+    int_a: eth3
+    ip_a: 10.0.0.10/31
+    node_b: r22
+    int_b: eth2
+    ip_b: 10.0.0.11/31
+    type: ebgp
+    local_pref_a: 100
+    local_pref_b: 100
+  - node_a: r13
+    int_a: eth3
+    ip_a: 10.0.0.12/31
+    node_b: r31
+    int_b: eth1
+    ip_b: 10.0.0.13/31
+    type: ebgp
+    local_pref_a: 150
+    local_pref_b: 150
+
+  # Hosts
+  - node_a: r11
+    int_a: eth4
+    ip_a: 10.10.1.1/24
+    node_b: h1
+    int_b: eth1
+    ip_b: 10.10.1.10/24
+    type: host
+  - node_a: r31
+    int_a: eth2
+    ip_a: 10.10.2.1/24
+    node_b: h2
+    int_b: eth1
+    ip_b: 10.10.2.10/24
+    type: host
+
+policies:
+  allowed_prefixes:
+    - 10.10.0.0/16 le 24
+  ebgp_max_prefix: 100
