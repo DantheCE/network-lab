@@ -4,10 +4,10 @@
 This project is a multi-AS BGP/IS-IS network lab built to demonstrate Python automation, network monitoring, and failure handling in a containerized environment. It uses `containerlab` and `FRRouting`.
 
 ## Topology Diagram
-*(Placeholder for diagram)*
-- AS 65001: R11, R12, R13
-- AS 65002: R21, R22
-- AS 65003: R31
+*(To be generated: shows AS65001, AS65002, AS65003 connected via Containerlab)*
+- **AS 65001**: R11, R12, R13 (Triangle, IS-IS L2, iBGP full-mesh)
+- **AS 65002**: R21, R22 (Direct link, IS-IS L2, iBGP full-mesh)
+- **AS 65003**: R31 (Single router)
 
 ## Quickstart
 
@@ -15,11 +15,11 @@ To launch the lab:
 ```bash
 make up
 ```
-This will deploy the containerlab topology and load the initial router configurations.
+This deploys the containerlab topology.
 
 To tear down the lab:
 ```bash
-make down
+make clean
 ```
 
 ## How to change the intent
