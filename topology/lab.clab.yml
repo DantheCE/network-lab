@@ -1,0 +1,73 @@
+name: network-lab
+topology:
+  nodes:
+    r11:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.1
+      binds:
+      - ./configs/r11/daemons:/etc/frr/daemons
+      - ./configs/r11/frr.conf:/etc/frr/frr.conf
+    r12:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.1
+      binds:
+      - ./configs/r12/daemons:/etc/frr/daemons
+      - ./configs/r12/frr.conf:/etc/frr/frr.conf
+    r13:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.1
+      binds:
+      - ./configs/r13/daemons:/etc/frr/daemons
+      - ./configs/r13/frr.conf:/etc/frr/frr.conf
+    r21:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.1
+      binds:
+      - ./configs/r21/daemons:/etc/frr/daemons
+      - ./configs/r21/frr.conf:/etc/frr/frr.conf
+    r22:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.1
+      binds:
+      - ./configs/r22/daemons:/etc/frr/daemons
+      - ./configs/r22/frr.conf:/etc/frr/frr.conf
+    r31:
+      kind: linux
+      image: quay.io/frrouting/frr:10.0.1
+      binds:
+      - ./configs/r31/daemons:/etc/frr/daemons
+      - ./configs/r31/frr.conf:/etc/frr/frr.conf
+    h1:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+    h2:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+  links:
+  - endpoints:
+    - r11:eth1
+    - r12:eth1
+  - endpoints:
+    - r12:eth2
+    - r13:eth1
+  - endpoints:
+    - r13:eth2
+    - r11:eth2
+  - endpoints:
+    - r21:eth1
+    - r22:eth1
+  - endpoints:
+    - r11:eth3
+    - r21:eth2
+  - endpoints:
+    - r12:eth3
+    - r22:eth2
+  - endpoints:
+    - r13:eth3
+    - r31:eth1
+  - endpoints:
+    - h1:eth1
+    - r11:eth4
+  - endpoints:
+    - h2:eth1
+    - r31:eth2
