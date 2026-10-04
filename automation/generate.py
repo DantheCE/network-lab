@@ -65,6 +65,10 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
     # Also generate the containerlab topology
     lab_yml = {
         "name": "network-lab",
+        "mgmt": {
+            "network": "clab",
+            "ipv4-subnet": "172.30.30.0/24"
+        },
         "topology": {
             "nodes": {},
             "links": []

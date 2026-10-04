@@ -1,4 +1,7 @@
 name: network-lab
+mgmt:
+  network: clab
+  ipv4-subnet: 172.30.30.0/24
 topology:
   nodes:
     r11:
@@ -7,36 +10,84 @@ topology:
       binds:
       - ./configs/r11/daemons:/etc/frr/daemons
       - ./configs/r11/frr.conf:/etc/frr/frr.conf
+    r11-frr-exporter:
+      kind: linux
+      image: tynany/frr_exporter:latest
+      network-mode: container:r11
+    r11-node-exporter:
+      kind: linux
+      image: prom/node-exporter:latest
+      network-mode: container:r11
     r12:
       kind: linux
       image: quay.io/frrouting/frr:10.0.1
       binds:
       - ./configs/r12/daemons:/etc/frr/daemons
       - ./configs/r12/frr.conf:/etc/frr/frr.conf
+    r12-frr-exporter:
+      kind: linux
+      image: tynany/frr_exporter:latest
+      network-mode: container:r12
+    r12-node-exporter:
+      kind: linux
+      image: prom/node-exporter:latest
+      network-mode: container:r12
     r13:
       kind: linux
       image: quay.io/frrouting/frr:10.0.1
       binds:
       - ./configs/r13/daemons:/etc/frr/daemons
       - ./configs/r13/frr.conf:/etc/frr/frr.conf
+    r13-frr-exporter:
+      kind: linux
+      image: tynany/frr_exporter:latest
+      network-mode: container:r13
+    r13-node-exporter:
+      kind: linux
+      image: prom/node-exporter:latest
+      network-mode: container:r13
     r21:
       kind: linux
       image: quay.io/frrouting/frr:10.0.1
       binds:
       - ./configs/r21/daemons:/etc/frr/daemons
       - ./configs/r21/frr.conf:/etc/frr/frr.conf
+    r21-frr-exporter:
+      kind: linux
+      image: tynany/frr_exporter:latest
+      network-mode: container:r21
+    r21-node-exporter:
+      kind: linux
+      image: prom/node-exporter:latest
+      network-mode: container:r21
     r22:
       kind: linux
       image: quay.io/frrouting/frr:10.0.1
       binds:
       - ./configs/r22/daemons:/etc/frr/daemons
       - ./configs/r22/frr.conf:/etc/frr/frr.conf
+    r22-frr-exporter:
+      kind: linux
+      image: tynany/frr_exporter:latest
+      network-mode: container:r22
+    r22-node-exporter:
+      kind: linux
+      image: prom/node-exporter:latest
+      network-mode: container:r22
     r31:
       kind: linux
       image: quay.io/frrouting/frr:10.0.1
       binds:
       - ./configs/r31/daemons:/etc/frr/daemons
       - ./configs/r31/frr.conf:/etc/frr/frr.conf
+    r31-frr-exporter:
+      kind: linux
+      image: tynany/frr_exporter:latest
+      network-mode: container:r31
+    r31-node-exporter:
+      kind: linux
+      image: prom/node-exporter:latest
+      network-mode: container:r31
     h1:
       kind: linux
       image: wbitt/network-multitool:alpine-extra
@@ -66,8 +117,8 @@ topology:
     - r13:eth3
     - r31:eth1
   - endpoints:
-    - h1:eth1
     - r11:eth4
+    - h1:eth1
   - endpoints:
-    - h2:eth1
     - r31:eth2
+    - h2:eth1
