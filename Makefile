@@ -6,7 +6,13 @@ up:
 down:
 	sudo clab destroy -t topology/lab.clab.yml --cleanup
 
-clean: down
+clean: down monitoring-down
+
+monitoring-up:
+	docker-compose -f monitoring/docker-compose.yml up -d
+
+monitoring-down:
+	docker-compose -f monitoring/docker-compose.yml down
 
 deploy:
 	python3 automation/deploy.py

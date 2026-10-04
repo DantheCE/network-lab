@@ -1,0 +1,40 @@
+groups:
+  - name: bgp_alerts
+    rules:
+      - alert: BGPSessionDown
+        expr: frr_bgp_peer_state{state="established"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "BGP Session Down (instance {{ $labels.instance }})"
+          description: "BGP session with peer {{ $labels.peer }} has been down for more than 1 minute."
+
+      - alert: BGPSessionFlapping
+        expr: changes(frr_bgp_peer_uptime_seconds[5m]) > 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "BGP Session Flapping (instance {{ $labels.instance }})"
+          description: "BGP session with peer {{ $labels.peer }} has flapped more than 3 times in 5 minutes."
+
+  - name: node_alerts
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Usage (instance {{ $labels.instance }})"
+          description: "CPU usage is above 80% for 5 minutes."
