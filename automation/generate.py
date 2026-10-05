@@ -57,6 +57,12 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
         
         r_dir = os.path.join(output_dir, r_name)
         os.makedirs(r_dir, exist_ok=True)
+        # Create the run directory for sockets
+        run_dir = os.path.join(r_dir, "run")
+        os.makedirs(run_dir, exist_ok=True)
+        # Give it full permissions so FRR inside docker can write the sockets
+        os.chmod(run_dir, 0o777)
+        
         with open(os.path.join(r_dir, "frr.conf"), "w") as f:
             f.write(rendered)
         with open(os.path.join(r_dir, "daemons"), "w") as f:
@@ -82,7 +88,7 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
             "binds": [
                 f"./configs/{r_name}/daemons:/etc/frr/daemons",
                 f"./configs/{r_name}/frr.conf:/etc/frr/frr.conf",
-                f"{r_name}-run:/var/run/frr"
+                f"./configs/{r_name}/run:/var/run/frr"
             ]
         }
         # FRR Exporter
@@ -91,7 +97,7 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
             "image": "tynany/frr_exporter:latest",
             "network-mode": f"container:{r_name}",
             "binds": [
-                f"{r_name}-run:/var/run/frr"
+                f"./configs/{r_name}/run:/var/run/frr"
             ]
         }
         # Node Exporter
