@@ -6,7 +6,7 @@
       "title": "BGP Sessions Established",
       "targets": [
         {
-          "expr": "sum(frr_bgp_peer_state{state=\"established\"}) or vector(0)",
+          "expr": "count(frr_bgp_peer_state == 1) or vector(0)",
           "refId": "A"
         }
       ],
@@ -17,7 +17,7 @@
       "title": "Prefixes Received",
       "targets": [
         {
-          "expr": "frr_bgp_peer_prefixes_received",
+          "expr": "frr_bgp_peer_prefixes_received_count_total",
           "legendFormat": "{{peer}}"
         }
       ],
