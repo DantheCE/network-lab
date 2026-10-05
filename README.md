@@ -23,9 +23,9 @@ graph TD
         R12((R12<br>10.255.0.12))
         R13((R13<br>10.255.0.13))
         
-        R11 <---|IS-IS and iBGP|---> R12
-        R11 <---|IS-IS and iBGP|---> R13
-        R12 <---|IS-IS and iBGP|---> R13
+        R11 <-->|IS-IS and iBGP| R12
+        R11 <-->|IS-IS and iBGP| R13
+        R12 <-->|IS-IS and iBGP| R13
     end
     class AS65001 asn;
 
@@ -36,7 +36,7 @@ graph TD
         H1[Host 1]
         H2[Host 2]
 
-        R21 <---|IS-IS and iBGP|---> R22
+        R21 <-->|IS-IS and iBGP| R22
         R21 --- H1
         R22 --- H2
     end
@@ -48,9 +48,9 @@ graph TD
     class AS65003 asn;
 
     %% External Connections
-    R11 <===|eBGP Primary<br>Local Pref 200|===> R21
-    R12 <===|eBGP Backup<br>Local Pref 100|===> R22
-    R13 <===|eBGP|===> R31
+    R11 <==>|eBGP Primary<br>Local Pref 200| R21
+    R12 <==>|eBGP Backup<br>Local Pref 100| R22
+    R13 <==>|eBGP| R31
 
     %% Observers
     subgraph Observability [Observability Stack]
