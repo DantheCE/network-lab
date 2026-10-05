@@ -60,7 +60,7 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
         with open(os.path.join(r_dir, "frr.conf"), "w") as f:
             f.write(rendered)
         with open(os.path.join(r_dir, "daemons"), "w") as f:
-            f.write("bgpd=yes\nisisd=yes\n")
+            f.write("zebra=yes\nbgpd=yes\nisisd=yes\n")
 
     # Also generate the containerlab topology
     lab_yml = {
