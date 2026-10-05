@@ -57,8 +57,8 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
         
         r_dir = os.path.join(output_dir, r_name)
         os.makedirs(r_dir, exist_ok=True)
-        # Create the run directory for sockets
-        run_dir = os.path.join(r_dir, "run")
+        # Create the run directory for sockets in the native Linux /tmp to support Unix Domain Sockets
+        run_dir = f"/tmp/clab_run_{r_name}"
         os.makedirs(run_dir, exist_ok=True)
         # Give it full permissions so FRR inside docker can write the sockets
         os.chmod(run_dir, 0o777)
@@ -82,13 +82,14 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
     }
     
     for r_name in intent.routers.keys():
+        run_dir = f"/tmp/clab_run_{r_name}"
         lab_yml["topology"]["nodes"][r_name] = {
             "kind": "linux",
             "image": "quay.io/frrouting/frr:10.0.1",
             "binds": [
                 f"./configs/{r_name}/daemons:/etc/frr/daemons",
                 f"./configs/{r_name}/frr.conf:/etc/frr/frr.conf",
-                f"./configs/{r_name}/run:/var/run/frr"
+                f"{run_dir}:/var/run/frr"
             ]
         }
         # FRR Exporter
@@ -97,7 +98,7 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
             "image": "tynany/frr_exporter:latest",
             "network-mode": f"container:{r_name}",
             "binds": [
-                f"./configs/{r_name}/run:/var/run/frr"
+                f"{run_dir}:/var/run/frr"
             ]
         }
         # Node Exporter
