@@ -2,7 +2,7 @@ groups:
   - name: bgp_alerts
     rules:
       - alert: BGPSessionDown
-        expr: frr_bgp_peer_state{state="established"} == 0
+        expr: frr_bgp_peer_state == 0
         for: 1m
         labels:
           severity: critical

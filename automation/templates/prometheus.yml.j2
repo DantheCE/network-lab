@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - "alert_rules.yml"
+
+scrape_configs:
+  - job_name: 'frr'
+    static_configs:
+      - targets:
+{% for r in routers %}
+        - clab-network-lab-{{ r }}:9342
+{% endfor %}
+
+  - job_name: 'node'
+    static_configs:
+      - targets:
+{% for r in routers %}
+        - clab-network-lab-{{ r }}:9100
+{% endfor %}

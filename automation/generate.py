@@ -12,6 +12,13 @@ def load_intent(filepath: str) -> Intent:
 def generate_configs(intent: Intent, template_dir: str, output_dir: str):
     env = Environment(loader=FileSystemLoader(template_dir))
     template = env.get_template("frr.conf.j2")
+    prom_template = env.get_template("prometheus.yml.j2")
+    
+    # Render Prometheus config
+    prom_rendered = prom_template.render(routers=intent.routers.keys())
+    prom_out = os.path.join(base_dir, "../monitoring/prometheus/prometheus.yml")
+    with open(prom_out, "w") as f:
+        f.write(prom_rendered)
 
     for r_name, r_data in intent.routers.items():
         ctx = {
