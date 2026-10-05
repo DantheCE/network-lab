@@ -14,3 +14,6 @@ clab-*/
 
 # OS
 .DS_Store
+
+# Ephemeral sockets
+topology/configs/*/run/

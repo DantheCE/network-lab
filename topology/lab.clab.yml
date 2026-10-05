@@ -10,10 +10,13 @@ topology:
       binds:
       - ./configs/r11/daemons:/etc/frr/daemons
       - ./configs/r11/frr.conf:/etc/frr/frr.conf
+      - /tmp/clab_run_r11:/var/run/frr
     r11-frr-exporter:
       kind: linux
       image: tynany/frr_exporter:latest
       network-mode: container:r11
+      binds:
+      - /tmp/clab_run_r11:/var/run/frr
     r11-node-exporter:
       kind: linux
       image: prom/node-exporter:latest
@@ -24,10 +27,13 @@ topology:
       binds:
       - ./configs/r12/daemons:/etc/frr/daemons
       - ./configs/r12/frr.conf:/etc/frr/frr.conf
+      - /tmp/clab_run_r12:/var/run/frr
     r12-frr-exporter:
       kind: linux
       image: tynany/frr_exporter:latest
       network-mode: container:r12
+      binds:
+      - /tmp/clab_run_r12:/var/run/frr
     r12-node-exporter:
       kind: linux
       image: prom/node-exporter:latest
@@ -38,10 +44,13 @@ topology:
       binds:
       - ./configs/r13/daemons:/etc/frr/daemons
       - ./configs/r13/frr.conf:/etc/frr/frr.conf
+      - /tmp/clab_run_r13:/var/run/frr
     r13-frr-exporter:
       kind: linux
       image: tynany/frr_exporter:latest
       network-mode: container:r13
+      binds:
+      - /tmp/clab_run_r13:/var/run/frr
     r13-node-exporter:
       kind: linux
       image: prom/node-exporter:latest
@@ -52,10 +61,13 @@ topology:
       binds:
       - ./configs/r21/daemons:/etc/frr/daemons
       - ./configs/r21/frr.conf:/etc/frr/frr.conf
+      - /tmp/clab_run_r21:/var/run/frr
     r21-frr-exporter:
       kind: linux
       image: tynany/frr_exporter:latest
       network-mode: container:r21
+      binds:
+      - /tmp/clab_run_r21:/var/run/frr
     r21-node-exporter:
       kind: linux
       image: prom/node-exporter:latest
@@ -66,10 +78,13 @@ topology:
       binds:
       - ./configs/r22/daemons:/etc/frr/daemons
       - ./configs/r22/frr.conf:/etc/frr/frr.conf
+      - /tmp/clab_run_r22:/var/run/frr
     r22-frr-exporter:
       kind: linux
       image: tynany/frr_exporter:latest
       network-mode: container:r22
+      binds:
+      - /tmp/clab_run_r22:/var/run/frr
     r22-node-exporter:
       kind: linux
       image: prom/node-exporter:latest
@@ -80,10 +95,13 @@ topology:
       binds:
       - ./configs/r31/daemons:/etc/frr/daemons
       - ./configs/r31/frr.conf:/etc/frr/frr.conf
+      - /tmp/clab_run_r31:/var/run/frr
     r31-frr-exporter:
       kind: linux
       image: tynany/frr_exporter:latest
       network-mode: container:r31
+      binds:
+      - /tmp/clab_run_r31:/var/run/frr
     r31-node-exporter:
       kind: linux
       image: prom/node-exporter:latest
