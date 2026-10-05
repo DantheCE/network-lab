@@ -81,14 +81,18 @@ def generate_configs(intent: Intent, template_dir: str, output_dir: str):
             "image": "quay.io/frrouting/frr:10.0.1",
             "binds": [
                 f"./configs/{r_name}/daemons:/etc/frr/daemons",
-                f"./configs/{r_name}/frr.conf:/etc/frr/frr.conf"
+                f"./configs/{r_name}/frr.conf:/etc/frr/frr.conf",
+                f"{r_name}-run:/var/run/frr"
             ]
         }
         # FRR Exporter
         lab_yml["topology"]["nodes"][f"{r_name}-frr-exporter"] = {
             "kind": "linux",
             "image": "tynany/frr_exporter:latest",
-            "network-mode": f"container:{r_name}"
+            "network-mode": f"container:{r_name}",
+            "binds": [
+                f"{r_name}-run:/var/run/frr"
+            ]
         }
         # Node Exporter
         lab_yml["topology"]["nodes"][f"{r_name}-node-exporter"] = {
