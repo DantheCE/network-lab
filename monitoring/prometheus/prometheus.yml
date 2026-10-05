@@ -13,19 +13,19 @@ scrape_configs:
   - job_name: 'frr'
     static_configs:
       - targets:
-        - clab-network-lab-r11-frr-exporter:9342
-        - clab-network-lab-r12-frr-exporter:9342
-        - clab-network-lab-r13-frr-exporter:9342
-        - clab-network-lab-r21-frr-exporter:9342
-        - clab-network-lab-r22-frr-exporter:9342
-        - clab-network-lab-r31-frr-exporter:9342
+        - clab-network-lab-r11:9342
+        - clab-network-lab-r12:9342
+        - clab-network-lab-r13:9342
+        - clab-network-lab-r21:9342
+        - clab-network-lab-r22:9342
+        - clab-network-lab-r31:9342
 
   - job_name: 'node'
     static_configs:
       - targets:
-        - clab-network-lab-r11-node-exporter:9100
-        - clab-network-lab-r12-node-exporter:9100
-        - clab-network-lab-r13-node-exporter:9100
-        - clab-network-lab-r21-node-exporter:9100
-        - clab-network-lab-r22-node-exporter:9100
-        - clab-network-lab-r31-node-exporter:9100
+        - clab-network-lab-r11:9100
+        - clab-network-lab-r12:9100
+        - clab-network-lab-r13:9100
+        - clab-network-lab-r21:9100
+        - clab-network-lab-r22:9100
+        - clab-network-lab-r31:9100
